@@ -1,0 +1,121 @@
+// Users and Authentication
+Table users {
+  id integer [primary key]
+  username varchar [unique, not null]
+  name varchar
+  password_hash varchar [not null]
+  email varchar [unique, not null]
+  role_id integer [not null, note: 'References static role configuration']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  last_login timestamp
+}
+
+// Inventory Management
+Table equipment {
+  id integer [primary key]
+  name varchar [not null]
+  description text
+  identifier varchar [unique, not null, note: 'For barcode/QR code']
+  status varchar [not null, note: 'available, in_use, maintenance']
+  acquisition_date date
+  last_maintenance_date date
+  next_maintenance_date date
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table maintenance_logs {
+  id integer [primary key]
+  equipment_id integer
+  maintained_by integer
+  maintenance_date date [not null]
+  description text
+  next_maintenance_date date
+}
+
+// Project Management
+Table projects {
+  id integer [primary key]
+  name varchar [not null]
+  description text
+  status varchar [not null, note: 'active, pending, completed']
+  start_date date
+  end_date date
+  created_by integer
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table project_members {
+  project_id integer
+  user_id integer
+  role varchar [not null, note: 'project_manager, member']
+  indexes {
+    (project_id, user_id) [pk]
+  }
+}
+
+Table project_documents {
+  id integer [primary key]
+  project_id integer
+  name varchar [not null]
+  file_path text [not null]
+  uploaded_by integer
+  uploaded_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+// Workspace and Equipment Booking
+Table bookings {
+  id integer [primary key]
+  equipment_id integer
+  booked_by integer
+  start_time timestamp [not null]
+  end_time timestamp [not null]
+  status varchar [not null, note: 'confirmed, cancelled, completed']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table usage_logs {
+  id integer [primary key]
+  booking_id integer
+  actual_start_time timestamp
+  actual_end_time timestamp
+  notes text
+}
+
+// Relationships
+
+Ref: maintenance_logs.equipment_id > equipment.id
+Ref: maintenance_logs.maintained_by > users.id
+
+Ref: projects.created_by > users.id
+
+Ref: project_members.project_id > projects.id
+Ref: project_members.user_id > users.id
+
+Ref: project_documents.project_id > projects.id
+Ref: project_documents.uploaded_by > users.id
+
+Ref: bookings.equipment_id > equipment.id
+Ref: bookings.booked_by > users.id
+
+Ref: usage_logs.booking_id > bookings.id
+
+// Indexes
+TableGroup Auth {
+  users
+}
+
+TableGroup Equipment {
+  equipment
+  maintenance_logs
+}
+
+TableGroup Projects {
+  projects
+  project_members
+  project_documents
+}
+
+TableGroup Bookings {
+  bookings
+  usage_logs
+}
