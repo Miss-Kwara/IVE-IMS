@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "maintenance_logs")
-public class MaintenanceLogs {
+public class MaintenanceLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,9 +41,9 @@ public class MaintenanceLogs {
         }
     }
 
-    public MaintenanceLogs() {}
+    public MaintenanceLog() {}
 
-    public MaintenanceLogs(Equipment equipment, User user, LocalDate maintenanceDate, String description, LocalDate nextMaintenanceDate) {
+    public MaintenanceLog(Equipment equipment, User user, LocalDate maintenanceDate, String description, LocalDate nextMaintenanceDate) {
         this.equipment = equipment;
         this.user = user;
         this.maintenanceDate = maintenanceDate;
