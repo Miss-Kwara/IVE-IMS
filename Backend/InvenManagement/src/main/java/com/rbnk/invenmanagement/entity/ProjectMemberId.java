@@ -35,4 +35,17 @@ public class ProjectMemberId implements Serializable {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProjectMemberId that = (ProjectMemberId) o;
+        return Objects.equals(projectId, that.projectId) && Objects.equals(userId, that.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(projectId, userId);
+    }
 }
