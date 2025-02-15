@@ -23,11 +23,23 @@ public class MaintenanceLogs {
     @Column(name = "maintenance_date", nullable = false)
     private LocalDate maintenanceDate;
 
+    @Lob
     @Column(name = "description")
     private String description;  // describe what the maintainer did and noticed
 
     @Column(name = "next_maintenance_date")
     private LocalDate nextMaintenanceDate;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.maintenanceDate == null) {
+            this.maintenanceDate = LocalDate.now();
+        }
+
+        if (this.nextMaintenanceDate == null) {
+            this.nextMaintenanceDate = LocalDate.now().plusMonths(6);
+        }
+    }
 
     public MaintenanceLogs() {}
 
