@@ -43,13 +43,13 @@ public class User {
                 String surname,
                 String passwordHash,
                 String email,
-                String roleId){
+                int roleId){
         this.username = username;
         this.firstname = firstname;
         this.surname = surname;
         this.passwordHash = passwordHash;
         this.email = email;
-        this.roleId = Integer.parseInt(roleId);
+        this.roleId = roleId;
     }
 
     public Long getId() {
