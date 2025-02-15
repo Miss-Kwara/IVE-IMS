@@ -39,8 +39,7 @@ public class Equipment {
 
     public Equipment() {}
 
-    public Equipment(Long id, String name, String description, String identifier, String status, LocalDate acquisitionDate, LocalDate lastMaintenanceDate, LocalDate nextMaintenanceDate) {
-        this.id = id;
+    public Equipment(String name, String description, String identifier, String status, LocalDate acquisitionDate, LocalDate lastMaintenanceDate, LocalDate nextMaintenanceDate) {
         this.name = name;
         this.description = description;
         this.identifier = identifier;
