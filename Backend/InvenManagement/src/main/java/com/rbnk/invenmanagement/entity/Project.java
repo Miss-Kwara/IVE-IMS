@@ -47,6 +47,11 @@ public class Project {
         this.user = user;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
     //getters & setters
 
     public Long getId() {

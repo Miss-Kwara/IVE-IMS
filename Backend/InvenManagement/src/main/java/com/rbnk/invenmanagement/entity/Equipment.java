@@ -49,6 +49,11 @@ public class Equipment {
         this.nextMaintenanceDate = nextMaintenanceDate;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
     public Long getId() {
         return id;
     }

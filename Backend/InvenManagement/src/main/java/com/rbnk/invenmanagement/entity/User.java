@@ -36,6 +36,11 @@ public class User {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
     public User() {}
     
     public User(String username, 
