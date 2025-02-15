@@ -3,6 +3,8 @@ package com.rbnk.invenmanagement.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -29,6 +31,9 @@ public class User {
 
     @Column(name = "role_id", nullable = false)  // see /config/RoleConfig
     private Integer roleId;
+
+    @OneToMany(mappedBy = "user")
+    private Set<ProjectMember> projects = new HashSet<>();
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -127,5 +132,13 @@ public class User {
 
     public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public Set<ProjectMember> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<ProjectMember> projects) {
+        this.projects = projects;
     }
 }

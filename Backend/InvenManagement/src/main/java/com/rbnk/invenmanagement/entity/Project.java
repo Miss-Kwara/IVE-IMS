@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "projects")
@@ -29,8 +31,11 @@ public class Project {
     @Column(name = "end_date")
     private LocalDate endDate;
 
+    @OneToMany(mappedBy = "project")
+    private Set<ProjectMember> members = new HashSet<>();
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "created_by", nullable = false)
     private User user;
 
     @Column(name = "created_at")
@@ -116,5 +121,13 @@ public class Project {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Set<ProjectMember> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Set<ProjectMember> members) {
+        this.members = members;
     }
 }
