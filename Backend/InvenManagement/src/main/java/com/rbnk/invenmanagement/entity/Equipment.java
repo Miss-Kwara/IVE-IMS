@@ -37,6 +37,11 @@ public class Equipment {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
     public Equipment() {}
 
     public Equipment(String name, String description, String identifier, String status, LocalDate acquisitionDate, LocalDate lastMaintenanceDate, LocalDate nextMaintenanceDate) {
@@ -49,10 +54,7 @@ public class Equipment {
         this.nextMaintenanceDate = nextMaintenanceDate;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
+
 
     public Long getId() {
         return id;
