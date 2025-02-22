@@ -36,20 +36,20 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
-    private User user;
+    private User creator;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public Project() {}
 
-    public Project(String projectName, String description, String status, LocalDate startDate, LocalDate endDate, User user) {
+    public Project(String projectName, String description, String status, LocalDate startDate, LocalDate endDate, User creator) {
         this.projectName = projectName;
         this.description = description;
         this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.user = user;
+        this.creator = creator;
     }
 
     @PrePersist
@@ -107,12 +107,12 @@ public class Project {
         this.endDate = endDate;
     }
 
-    public User getUser() {
-        return user;
+    public User getCreator() {
+        return creator;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCreator(User user) {
+        this.creator = user;
     }
 
     public LocalDateTime getCreatedAt() {
