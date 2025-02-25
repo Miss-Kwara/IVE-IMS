@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @Service
 public class ProjectDocumentService {
 
@@ -75,5 +79,20 @@ public class ProjectDocumentService {
 
         projectDocumentRepository.delete(document);
     }
-}
 
+    // Check if a file exists on the filesystem, and delete the record if it doesn't
+    public boolean validateAndRemoveMissingFiles() {
+        List<ProjectDocument> allDocuments = projectDocumentRepository.findAll();
+        boolean deletedAny = false;
+
+        for (ProjectDocument document : allDocuments) {
+            Path path = Paths.get(document.getFilepath());
+            if (!Files.exists(path)) {
+                projectDocumentRepository.delete(document);
+                deletedAny = true;
+            }
+        }
+
+        return deletedAny;
+    }
+}
