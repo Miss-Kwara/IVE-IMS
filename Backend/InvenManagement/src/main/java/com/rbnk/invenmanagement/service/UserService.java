@@ -184,4 +184,10 @@ public class UserService {
         projectMemberRepository.deleteByUser(user);
         userRepository.delete(user);
     }
+
+    @Transactional(readOnly = true)
+    public Long returnId(String username){
+        User user = userRepository.findByUsername(username);
+        return user.getId();
+    }
 }
