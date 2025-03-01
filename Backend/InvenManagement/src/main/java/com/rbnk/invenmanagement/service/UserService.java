@@ -1,5 +1,7 @@
 package com.rbnk.invenmanagement.service;
 
+import com.rbnk.invenmanagement.DTO.LoginRequest;
+import com.rbnk.invenmanagement.DTO.LoginResponse;
 import com.rbnk.invenmanagement.DTO.UserRegistrationRequest;
 import com.rbnk.invenmanagement.DTO.UserUpdateRequest;
 import com.rbnk.invenmanagement.entity.Project;
@@ -118,23 +120,32 @@ public class UserService {
     }
 
     @Transactional
-    public void updateLastLogin(Long userId) {
-        User user = getUserById(userId);
-        user.setLastLogin(LocalDateTime.now());
-        userRepository.save(user);
-    }
-
-    @Transactional(readOnly = true)
-    public boolean authenticateUser(String username, String password) {
-        User user = userRepository.findByUsername(username);
-
-        if (user == null) {
+    public LoginResponse login(LoginRequest loginRequest){
+        if (!userRepository.existsByUsername(loginRequest.getUsername())) {
             throw new UsernameNotFoundException("Username not found");
         }
-        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+
+        User user = userRepository.findByUsername(loginRequest.getUsername());
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
             throw new BadCredentialsException("Wrong password");
         }
-        return true;
+
+        updateLastLogin(user);
+
+        return new LoginResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getFirstname(),
+                user.getSurname(),
+                user.getEmail(),
+                user.getRoleId()
+        );
+    }
+
+    @Transactional
+    public void updateLastLogin(User user) {
+        user.setLastLogin(LocalDateTime.now());
+        userRepository.save(user);
     }
 
     @Transactional
