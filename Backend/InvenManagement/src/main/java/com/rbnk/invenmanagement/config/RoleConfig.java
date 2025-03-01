@@ -10,4 +10,17 @@ public class RoleConfig {
         tier.put("technician", 2);
         tier.put("student", 3);
     }
+
+    public Integer getTier(String role) {
+        return tier.get(role);
+    }
+
+    public String getTierName(int tier) {
+        return switch (tier) {
+            case 1 -> "Admin";
+            case 2 -> "Technician";
+            case 3 -> "Student";
+            default -> null;
+        };
+    }
 }
