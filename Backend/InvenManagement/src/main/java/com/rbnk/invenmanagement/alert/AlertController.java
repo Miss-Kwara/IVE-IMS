@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,54 +27,42 @@ public class AlertController {
     }
 
     /**
-     * Get alerts for the current authenticated user
+     * Get alerts for a specific user
      */
-    @GetMapping("/my-alerts")
-    public ResponseEntity<List<Alert>> getMyAlerts() {
-        User currentUser = getCurrentUser();
-        List<Alert> alerts = alertService.getAlertsForUser(currentUser);
-        return ResponseEntity.ok(alerts);
-    }
-
-    /**
-     * Get alerts for a specific user (admin only)
-     */
-    @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Alert>> getAlertsForUser(@PathVariable Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
+    @GetMapping("{username}/my-alerts")
+    public ResponseEntity<List<Alert>> getMyAlerts(@PathVariable String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
         List<Alert> alerts = alertService.getAlertsForUser(user);
         return ResponseEntity.ok(alerts);
     }
 
     /**
-     * Get all alerts (admin only)
+     * Get all alerts
      */
-    @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Alert>> getAllAlerts() {
+    @GetMapping("/{username}/all")
+    public ResponseEntity<List<Alert>> getAllAlerts(@PathVariable String username) {
         List<Alert> alerts = alertService.getSentAlertsLog();
         return ResponseEntity.ok(alerts);
     }
 
     /**
-     * Get alerts by type (admin only)
+     * Get alerts by type
      */
-    @GetMapping("/by-type/{alertType}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Alert>> getAlertsByType(@PathVariable AlertType alertType) {
+    @GetMapping("/{username}/by-type/{alertType}")
+    public ResponseEntity<List<Alert>> getAlertsByType(@PathVariable String username, @PathVariable AlertType alertType) {
         List<Alert> alerts = alertService.getAlertsByType(alertType);
         return ResponseEntity.ok(alerts);
     }
 
     /**
-     * Get alerts by time range (admin only)
+     * Get alerts by time range
      */
-    @GetMapping("/by-time-range")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{username}/by-time-range")
     public ResponseEntity<List<Alert>> getAlertsByTimeRange(
+            @PathVariable String username,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
 
@@ -86,11 +71,10 @@ public class AlertController {
     }
 
     /**
-     * Send a system alert (admin only)
+     * Send a system alert
      */
-    @PostMapping("/system-alert")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Alert> sendSystemAlert(@RequestBody Map<String, String> payload) {
+    @PostMapping("/{username}/system-alert")
+    public ResponseEntity<Alert> sendSystemAlert(@PathVariable String username, @RequestBody Map<String, String> payload) {
         String targetRole = payload.get("targetRole");
         String message = payload.get("message");
 
@@ -103,11 +87,10 @@ public class AlertController {
     }
 
     /**
-     * Send a maintenance alert (admin and technician only)
+     * Send a maintenance alert
      */
-    @PostMapping("/maintenance-alert")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
-    public ResponseEntity<Alert> sendMaintenanceAlert(@RequestBody Map<String, String> payload) {
+    @PostMapping("/{username}/maintenance-alert")
+    public ResponseEntity<Alert> sendMaintenanceAlert(@PathVariable String username, @RequestBody Map<String, String> payload) {
         String targetRole = payload.get("targetRole");
         String message = payload.get("message");
         AlertType alertType = payload.containsKey("alertType") ?
@@ -119,15 +102,5 @@ public class AlertController {
 
         Alert alert = alertService.sendMaintenanceAlert(targetRole, alertType, message);
         return ResponseEntity.ok(alert);
-    }
-
-    /**
-     * Helper method to get the current authenticated user
-     */
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        return userRepository.findByUsername(username);
     }
 }

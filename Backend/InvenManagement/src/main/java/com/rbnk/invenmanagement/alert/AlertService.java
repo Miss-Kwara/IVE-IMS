@@ -212,13 +212,6 @@ public class AlertService {
         }
     }
 
-    // Dummy role mapping: 1 = ADMIN, 2 = TECHNICIAN, all others = USER.
-    private String mapRoleIdToRole(Integer roleId) {
-        if (roleId == 1) return "ADMIN";
-        if (roleId == 2) return "TECHNICIAN";
-        return "USER";
-    }
-
     /**
      * Check if an alert type is a booking-related alert type
      */
