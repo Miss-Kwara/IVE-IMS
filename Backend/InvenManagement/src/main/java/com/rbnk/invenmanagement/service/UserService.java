@@ -143,7 +143,7 @@ public class UserService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
-        if (projectMemberRepository.existsByUserAndProject(user, project)) {
+        if (projectMemberRepository.existsByProjectAndUser(project, user)) {
             throw new IllegalArgumentException("User is already a member of this project");
         }
 
