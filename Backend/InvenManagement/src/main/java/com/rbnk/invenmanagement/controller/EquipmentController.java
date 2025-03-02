@@ -43,7 +43,7 @@ public class EquipmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Equipment> createEquipment(@RequestBody Equipment equipment, @RequestHeader("username") String username) {
+    public ResponseEntity<Equipment> createEquipment(@RequestBody Equipment equipment, @RequestParam("username") String username) {
         if (lacksPermission(username, 2)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -52,7 +52,7 @@ public class EquipmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Equipment> updateEquipment(@PathVariable Long id, @RequestBody Equipment updatedEquipment, @RequestHeader("username") String username) {
+    public ResponseEntity<Equipment> updateEquipment(@PathVariable Long id, @RequestBody Equipment updatedEquipment, @RequestParam("username") String username) {
         if (lacksPermission(username, 2)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -61,7 +61,7 @@ public class EquipmentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEquipment(@PathVariable Long id, @RequestHeader("username") String username) {
+    public ResponseEntity<Void> deleteEquipment(@PathVariable Long id, @RequestParam("username") String username) {
         if (lacksPermission(username, 1)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -75,7 +75,7 @@ public class EquipmentController {
     }
 
     @PutMapping("/{id}/maintenance")
-    public ResponseEntity<Equipment> markAsUnderMaintenance(@PathVariable Long id, @RequestHeader("username") String username) {
+    public ResponseEntity<Equipment> markAsUnderMaintenance(@PathVariable Long id, @RequestParam("username") String username) {
         if (lacksPermission(username, 2)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
