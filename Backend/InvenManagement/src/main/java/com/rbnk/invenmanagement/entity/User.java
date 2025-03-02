@@ -33,7 +33,7 @@ public class User {
     private Integer roleId;
 
     @OneToMany(mappedBy = "user")
-    private Set<ProjectMember> projects = new HashSet<>();
+    private Set<ProjectMember> projectMembers = new HashSet<>();
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -134,11 +134,11 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    public Set<ProjectMember> getProjects() {
-        return projects;
+    public Set<ProjectMember> getProjectMembers() {
+        return projectMembers;
     }
 
-    public void setProjects(Set<ProjectMember> projects) {
-        this.projects = projects;
+    public void setProjectMembers(Set<ProjectMember> projects) {
+        this.projectMembers = projects;
     }
 }

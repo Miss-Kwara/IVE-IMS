@@ -173,7 +173,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public Set<Project> getUserProjects(Long userId) {
         User user = getUserById(userId);
-        return user.getProjects().stream()
+        return user.getProjectMembers().stream()
                 .map(ProjectMember::getProject)
                 .collect(Collectors.toSet());
     }
