@@ -45,7 +45,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    protected User getUserById(Long userId) {
+    public User getUserById(Long userId) {
         return validateUserExists(userId);
     }
 

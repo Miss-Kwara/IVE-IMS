@@ -1,7 +1,10 @@
 package com.rbnk.invenmanagement.config;
 
+import org.springframework.context.annotation.Configuration;
+
 import java.util.HashMap;
 
+@Configuration
 public class RoleConfig {
     static HashMap<String, Integer> tier = new HashMap<>();
 
