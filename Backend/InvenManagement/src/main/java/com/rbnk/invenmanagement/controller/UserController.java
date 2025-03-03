@@ -1,9 +1,6 @@
 package com.rbnk.invenmanagement.controller;
 
-import com.rbnk.invenmanagement.DTO.LoginRequest;
-import com.rbnk.invenmanagement.DTO.LoginResponse;
-import com.rbnk.invenmanagement.DTO.UserRegistrationRequest;
-import com.rbnk.invenmanagement.DTO.UserUpdateRequest;
+import com.rbnk.invenmanagement.DTO.*;
 import com.rbnk.invenmanagement.entity.Project;
 import com.rbnk.invenmanagement.entity.User;
 import com.rbnk.invenmanagement.service.UserService;
@@ -26,9 +23,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserRegistrationRequest request) {
+    public ResponseEntity<UserResponse> registerUser(@RequestBody UserRegistrationRequest request) {
         User newUser = userService.createUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.castUserToResponse(newUser));
     }
 
     @PostMapping("/login")
@@ -38,9 +35,9 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<User> updateUser(@PathVariable String username, @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable String username, @RequestBody UserUpdateRequest request) {
         User updatedUser = userService.updateUser(userService.returnId(username), request);
-        return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok(userService.castUserToResponse(updatedUser));
     }
 
     @PutMapping("/{username}/change-password")

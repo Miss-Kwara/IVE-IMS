@@ -1,9 +1,6 @@
 package com.rbnk.invenmanagement.service;
 
-import com.rbnk.invenmanagement.DTO.LoginRequest;
-import com.rbnk.invenmanagement.DTO.LoginResponse;
-import com.rbnk.invenmanagement.DTO.UserRegistrationRequest;
-import com.rbnk.invenmanagement.DTO.UserUpdateRequest;
+import com.rbnk.invenmanagement.DTO.*;
 import com.rbnk.invenmanagement.entity.Project;
 import com.rbnk.invenmanagement.entity.ProjectMember;
 import com.rbnk.invenmanagement.entity.User;
@@ -189,5 +186,16 @@ public class UserService {
     public Long returnId(String username){
         User user = userRepository.findByUsername(username);
         return user.getId();
+    }
+
+    public UserResponse castUserToResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getFirstname(),
+                user.getSurname(),
+                user.getEmail(),
+                user.getRoleId()
+        );
     }
 }
