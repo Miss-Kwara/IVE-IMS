@@ -2,7 +2,8 @@
 Table users {
   id integer [primary key]
   username varchar [unique, not null]
-  name varchar
+  firstname varchar
+  secondname varchar
   password_hash varchar [not null]
   email varchar [unique, not null]
   role_id integer [not null, note: 'References static role configuration']
